@@ -1,0 +1,13 @@
+[
+    {
+        "fields": {
+            "username": "yi",
+            "email": "yi@foo.com",
+            "password": "pbkdf2_sha256$10000$NzbAm14meuMc$d/FsbNKtXcVCbNIbfLTCevZDyE4ZSl2WQhmp+wwyTT4=",
+            "is_staff": 1,
+            "is_active": 1
+        },
+        "model": "auth.user",
+        "pk": 1
+    }
+]

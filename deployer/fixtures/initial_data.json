@@ -1,0 +1,10 @@
+[
+    {
+        "fields": {
+            "method": "fabric",
+            "base_command": "fab"
+        },
+        "pk": 1,
+        "model": "deployer.deploymentmethod"
+    }
+]

@@ -1,0 +1,15 @@
+Django==1.4.1
+Fabric==1.5.0
+MySQL-python==1.2.4c1
+South==0.7.6
+amqplib==1.0.2
+anyjson==0.3.3
+argparse==1.2.1
+billiard==2.7.3.17
+celery==3.0.11
+django-celery==3.0.11
+kombu==2.4.8
+python-dateutil==1.5
+pytz==2012h
+simplejson==2.6.2
+wsgiref==0.1.2

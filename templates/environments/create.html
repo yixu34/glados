@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{{ data }}
+
+
+<form method="post" action="{% url g_create_environment %}">
+{% csrf_token %}
+<table>
+	<tr>
+		<td>Name:</td>
+		<td><input type="text" name="name" /></td>
+	</tr>
+</table>
+<input type="submit" value="Create environment!" />
+</form>
+
+<p>
+<a href="{% url g_index %}">Return to index</a>
+</p>
+
+{% endblock %}

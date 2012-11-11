@@ -1,0 +1,13 @@
+git
+mysql-client-core-5.5
+mysql-server-5.5
+build-essential
+libevent-dev
+memcached
+rabbitmq-server
+
+rabbitmqctl add_user celery beanutputter
+rabbitmqctl add_vhost guidebook
+rabbitmqctl set_permissions -p guidebook celery ".*" ".*" ".*"
+
+build-dep python-mysqldb

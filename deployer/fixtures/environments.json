@@ -1,0 +1,130 @@
+[
+    {
+        "fields": {
+            "method": "fabric",
+            "base_command": "fab"
+        },
+        "model": "deployer.deploymentmethod",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "test environment"
+        },
+        "model": "deployer.environment",
+        "pk": 1
+    }, 
+
+
+    {
+        "fields": {
+            "name": "dev",
+            "defaults": 1,
+            "environment": 1,
+            "deployment_method": 1
+        },
+        "model": "deployer.environmentstage",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "staging",
+            "defaults": 2,
+            "environment": 1,
+            "deployment_method": 1
+        },
+        "model": "deployer.environmentstage",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "name": "prod",
+            "defaults": 3,
+            "environment": 1,
+            "deployment_method": 1
+        },
+        "model": "deployer.environmentstage",
+        "pk": 3
+    },
+
+
+    {
+        "fields": {
+            "deployment_args_template": "test",
+            "main_repository": 1,
+            "default_deployment_args": ""
+        },
+        "model": "deployer.environmentstagedefaults",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "repository": 1,
+            "defaults": 1
+        },
+        "model": "deployer.environmentstagedefaultrepository",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "repository": 2,
+            "defaults": 1
+        },
+        "model": "deployer.environmentstagedefaultrepository",
+        "pk": 2
+    },
+
+
+    {
+        "fields": {
+            "deployment_args_template": "error",
+            "main_repository": 1,
+            "default_deployment_args": ""
+        },
+        "model": "deployer.environmentstagedefaults",
+        "pk": 2
+    },
+    {
+        "fields": {
+            "repository": 1,
+            "defaults": 2
+        },
+        "model": "deployer.environmentstagedefaultrepository",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "repository": 2,
+            "defaults": 2
+        },
+        "model": "deployer.environmentstagedefaultrepository",
+        "pk": 4
+    },
+
+
+    {
+        "fields": {
+            "deployment_args_template": "build:code_repo=$(code_repo),assets_repo=$(assets_repo),flag=$(flag)",
+            "main_repository": 1,
+            "default_deployment_args": "{\"code_repo\": \"test_code\", \"assets_repo\": \"override_me\", \"flag\": \"foo\"}"
+        },
+        "model": "deployer.environmentstagedefaults",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "repository": 1,
+            "defaults": 3
+        },
+        "model": "deployer.environmentstagedefaultrepository",
+        "pk": 3
+    },
+    {
+        "fields": {
+            "repository": 2,
+            "defaults": 3
+        },
+        "model": "deployer.environmentstagedefaultrepository",
+        "pk": 4
+    }
+]

@@ -1,0 +1,18 @@
+[
+    {
+        "fields": {
+            "name": "test_code.git",
+            "location": "https://foo.com/git/code.git"
+        },
+        "model": "deployer.repository",
+        "pk": 1
+    },
+    {
+        "fields": {
+            "name": "test_assets.git",
+            "location": "https://foo.com/git/assets.git"
+        },
+        "model": "deployer.repository",
+        "pk": 2
+    }
+]

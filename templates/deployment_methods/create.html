@@ -1,0 +1,22 @@
+{% block content %}
+
+<form method="post" action="{% url g_create_deployment_method %}">
+{% csrf_token %}
+<table>
+	<tr>
+		<td>Method name:</td>
+		<td><input type="text" name="method" /></td>
+	</tr>
+	<tr>
+		<td>Command:</td>
+		<td><input type="text" name="base_command" /></td>
+	</tr>
+</table>
+<input type="submit" value="Create deployment method!" />
+</form>
+
+<p>
+<a href="{% url g_index %}">Return to index</a>
+</p>
+
+{% endblock %}

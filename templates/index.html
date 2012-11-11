@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p>
+<b>Deployment methods</b><br>
+{% if deployment_methods %}
+<table>
+    <tr>
+        <td>Name</td><td>Command</td>
+    </tr>
+    {% for d in deployment_methods %}
+    <tr>
+        <td>{{d.method}}</td><td>{{d.base_command}}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+    No deployment methods created
+{% endif %}
+<br>
+<a href="{% url g_create_deployment_method %}">Create a new deployment method</a>
+</p>
+
+
+<p>
+<b>Repositories</b><br>
+{% if repositories %}
+    {% for r in repositories %}
+        {{r.name}}:  {{r.location}}<br>
+    {% endfor %}
+{% else %}
+    No repositories created
+{% endif %}
+<br>
+<a href="{% url g_create_repository %}">Create a new repository</a>
+</p>
+
+<p>
+<b>Environments</b><br>
+{% if environments %}
+    {% for e in environments %}
+        <a href="{% url g_get_environment e.id %}">{{e.name}}</a><br>
+    {% endfor %}
+{% else %}
+    No environments created
+{% endif %}
+<br>
+<a href="{% url g_create_environment %}">Create a new environment</a>
+</p>
+
+<b>Last few deployments</b><br>
+<table>
+{% if deployments %}
+    <tr>
+        <td>id</td>
+        <td>Status</td>
+        <td>Environment stage</td>
+        <td>User</td>
+        <td>Argument overrides</td>
+        <td>Comments</td>
+    </tr>
+{% else %}
+    No deployments yet<p>
+{% endif %}
+{% for d in deployments %}
+    <tr>
+        <td><a href="{% url g_get_deployment d.id %}">{{d.id}}</a></td>
+        <td>{{d.status}}</td>
+        <td>{{d.environment_stage.environment.name}} {{d.environment_stage.name}}</td>
+        <td>{{d.created_user}}</td>
+        <td>{{d.deployment_args_overrides}}</td>
+        <td>{{d.comments}}</td>
+    </tr>
+{% endfor %}
+</table>
+
+<b>Create a new deployment</b>
+<form method="post" action="{% url g_create_deployment %}">
+{% csrf_token %}
+<table>
+	<tr>
+		<td>Environment stage id:</td>
+		<td><input type="text" name="environment_stage_id" /></td>
+	</tr>
+	<tr>
+		<td>Comments:</td>
+		<td><input type="text" name="comments" /></td>
+	</tr>
+	<tr>
+		<td>Argument overrides:</td>
+		<td><input type="text" name="deployment_args_overrides" /></td>
+	</tr>
+</table>
+<input type="submit" value="Deploy!" />
+</form>
+
+
+<p><p>
+<a href="/logout">Log out</a>
+
+{% endblock %}
