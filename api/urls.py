@@ -11,7 +11,6 @@ urlpatterns = patterns('api.views',
     url(r'^deployments/(?P<deployment_id>\d+)/rollback/$', 'rollback_to_deployment', name='api_rollback_to_deployment'),
     url(r'^deployments/(?P<deployment_id>\d+)/abort/$', 'abort_deployment', name='api_abort_deployment'),
 
-
     # Environments
     url(r'^environments/$', 'get_environments', name='api_get_environments'),
     url(r'^environments/create/$', 'create_environment', name='api_create_environment'),
@@ -21,7 +20,6 @@ urlpatterns = patterns('api.views',
     url(r'^environments/(?P<environment_id>\d+)/stages/$', 'get_environment_stages', name='api_get_environment_stages'),
     url(r'^environments/(?P<environment_id>\d+)/stages/create/$', 'create_environment_stage', name='api_create_environment_stage'),
     url(r'^environments/(?P<environment_id>\d+)/stages/(?P<stage_id>\d+)/$', 'get_environment_stage', name='api_get_environment_stage'),
-
 
     # Repositories
     url(r'^repositories/$', 'get_repositories', name='api_get_repositories'),

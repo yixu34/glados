@@ -2,20 +2,6 @@
 
 {% block content %}
 
-<form method="post" action="{% url g_rollback_to_deployment deployment_id %}">
-{% csrf_token %}
-<table>
-	<tr>
-		<td>Comments</td>
-		<td><input type="text" name="comments" /></td>
-	</tr>
-	<tr>
-		<td>Argument overrides id</td>
-		<td><input type="text" name="deployment_args_overrides" /></td>
-	</tr>
-</table>
-<input type="submit" value="Roll back!" />
-</form>
-
+{{ name }}
 
 {% endblock %}

@@ -5,8 +5,7 @@ from deployer.models import Deployment, DeploymentMethod, Repository, Environmen
                             EnvironmentStageDefaults, EnvironmentStageDefaultRepository
 from util.decorators import param_required
 from util.responses import ApiSuccess, ApiError
-import simplejson
-
+import simplejson 
 
 @login_required
 @param_required(['method', 'base_command'])
@@ -16,8 +15,7 @@ def create_deployment_method(request, method, base_command):
         deployment_method = DeploymentMethod.objects.create(method=method, base_command=base_command)
         return ApiSuccess(deployment_method.to_dict())
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @require_GET
@@ -26,8 +24,7 @@ def get_deployment_methods(request):
         deployment_methods = [d.to_dict() for d in DeploymentMethod.objects.all()]
         return ApiSuccess(simplejson.dumps(deployment_methods))
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @require_GET
@@ -36,8 +33,7 @@ def get_deployment(request, deployment_id):
         deployment = Deployment.objects.get(pk=deployment_id)
         return ApiSuccess(deployment.to_dict())
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @require_GET
@@ -46,8 +42,7 @@ def get_deployments(request):
         deployments = [d.to_dict() for d in Deployment.objects.all()]
         return ApiSuccess(deployments)
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @param_required(['environment_stage_id', 'comments'])
@@ -66,8 +61,7 @@ def create_deployment(request, environment_stage_id, comments):
         if deployment.status == 'r':
             deployment.start(now)
     finally:
-        return ApiSuccess(deployment.to_dict())
-
+        return ApiSuccess(deployment.to_dict()) 
 
 @login_required
 @param_required(['comments'])
@@ -84,8 +78,7 @@ def rollback_to_deployment(request, deployment_id, comments):
         else:
             return ApiError('Failed to create rollback deployment')
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @require_POST
@@ -96,16 +89,14 @@ def abort_deployment(request, deployment_id):
         deployment.abort(now, request.user)
         return ApiSuccess(deployment.to_dict())
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 ####
 @login_required
 @require_GET
 def get_repositories(request):
     repositories = [r.to_dict() for r in Repository.objects.all()]
-    return ApiSuccess(repositories)
-
+    return ApiSuccess(repositories) 
 
 @login_required
 @require_GET
@@ -114,8 +105,7 @@ def get_repository(request, repository_id):
         repository = Repository.objects.get(pk=repository_id)
         return ApiSuccess(repository.to_dict())
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @param_required(['name', 'location'])
@@ -125,16 +115,14 @@ def create_repository(request, name, location):
         repository = Repository.objects.create(name=name, location=location)
         return ApiSuccess(repository.to_dict())
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 ###
 @login_required
 @require_GET
 def get_environments(request):
     environments = [e.to_dict() for e in Environment.objects.all()]
-    return ApiSuccess(environments)
-
+    return ApiSuccess(environments) 
 
 @login_required
 @require_GET
@@ -143,8 +131,7 @@ def get_environment(request, environment_id):
         environment = Environment.objects.get(pk=environment_id)
         return ApiSuccess(environment.to_dict())
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @param_required('name')
@@ -166,8 +153,7 @@ def get_environment_stages(request, environment_id):
         result =  ApiSuccess([stage.to_dict() for stage in environment.environmentstage_set.all()])
         return result
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @require_GET
@@ -179,8 +165,7 @@ def get_environment_stage(request, environment_id, stage_id):
             return ApiError('Stage id %s is not for environment %s' % (stage_id, environment_id))
         return ApiSuccess(stage.to_dict())
     except Exception as e:
-        return ApiError(e.message)
-
+        return ApiError(e.message) 
 
 @login_required
 @param_required(['stage_name', 'defaults_string', 'deployment_method_name'])
