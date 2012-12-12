@@ -7,7 +7,7 @@ memcached
 rabbitmq-server
 
 rabbitmqctl add_user celery beanutputter
-rabbitmqctl add_vhost guidebook
-rabbitmqctl set_permissions -p guidebook celery ".*" ".*" ".*"
+rabbitmqctl add_vhost glados
+rabbitmqctl set_permissions -p glados celery ".*" ".*" ".*"
 
 build-dep python-mysqldb

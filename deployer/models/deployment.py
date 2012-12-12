@@ -53,13 +53,15 @@ def on_deployment_complete(sender, **kwargs):
 class DeploymentManager(models.Manager):
     @transaction.commit_on_success
     def create(self, environment_stage_id, user_id, comments, deployment_args_overrides=''):
-        is_blocked = self.filter(environment_stage_id=environment_stage_id, status__in=['r', 'i', 'w']).exists()
+        is_blocked = self.filter(environment_stage_id=environment_stage_id,
+                                 status__in=['r', 'i', 'w']).exists()
         status = 'w' if is_blocked else 'r'
+        override = deployment_args_override or ''
         deployment = super(DeploymentManager, self).create(environment_stage_id=environment_stage_id,
                                                            created_user_id=user_id,
                                                            status=status,
                                                            comments=comments,
-                                                           deployment_args_overrides=deployment_args_overrides or '')
+                                                           deployment_args_overrides=override)
         return deployment
 
 
@@ -80,10 +82,14 @@ class Deployment(models.Model):
     deployment_args_overrides = models.CharField(max_length=255, blank=True)
 
     created_user = models.ForeignKey(User, related_name='createddeployment_set')
-    aborted_user = models.ForeignKey(User, null=True, related_name='aborteddeployment_set') # Can be set at most once.
+
+    # Can be set at most once.
+    aborted_user = models.ForeignKey(User, null=True, related_name='aborteddeployment_set')
     created_time = models.DateTimeField(auto_now_add=True)
     started_time = models.DateTimeField(null=True)
-    completed_time = models.DateTimeField(null=True) # Could be completed or aborted.
+
+    # Could be completed or aborted.
+    completed_time = models.DateTimeField(null=True)
 
     task_id = models.CharField(max_length=255, blank=True)
 
@@ -110,9 +116,8 @@ class Deployment(models.Model):
             self.started_time = now
             self.save()
             deployment_started.send(sender=self)
-            #strategy = kwargs['strategy'] if 'strategy' in kwargs else Deployment.default_strategy
-            #deploy.delay(self.id, strategy)
-            deploy.delay(self.id)
+            self.task_id = deploy.delay(self.id)
+            self.save()
             return True
         else:
             return False
