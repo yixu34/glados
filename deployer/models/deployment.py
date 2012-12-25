@@ -31,11 +31,9 @@ def deploy_strategy(deployment):
                               cwd=cwd)
         log_file.close()
 
-        print 'Deployment %i with comments "%s" complete!' % (deployment.id, deployment.comments)
         now = timezone.now()
         deployment.complete(now)
     except Exception as e:
-        print 'Deployment failed!  %s' % str(e)
         now = timezone.now()
         deployment.fail(now)
 
@@ -56,7 +54,7 @@ class DeploymentManager(models.Manager):
         is_blocked = self.filter(environment_stage_id=environment_stage_id,
                                  status__in=['r', 'i', 'w']).exists()
         status = 'w' if is_blocked else 'r'
-        override = deployment_args_override or ''
+        override = deployment_args_overrides or ''
         deployment = super(DeploymentManager, self).create(environment_stage_id=environment_stage_id,
                                                            created_user_id=user_id,
                                                            status=status,
@@ -116,8 +114,7 @@ class Deployment(models.Model):
             self.started_time = now
             self.save()
             deployment_started.send(sender=self)
-            self.task_id = deploy.delay(self.id)
-            self.save()
+            deploy.delay(self.id)
             return True
         else:
             return False

@@ -77,7 +77,8 @@ class DeploymentTests(BaseTestCase):
         with _override_deployment_strategy(strategy):
             deployment1.start(self.now)
         deployment1 = Deployment.objects.get(pk=deployment1.id)
-        self.assertEqual(deployment1.status, complete_status, 'Expected first deployment to be marked as "%s"' % complete_status)
+        self.assertEqual(deployment1.status, complete_status,
+                         'Expected first deployment to be marked as "%s"' % complete_status)
 
         self.assertTrue('completed' in received_signals,
                         'Expected to have received a signal that the first deployment completed')
@@ -102,9 +103,10 @@ class DeploymentTests(BaseTestCase):
         deployment = Deployment.objects.create(comments='first', **self.deployment_args)
         deployment.status = 'i'
         deployment.save()
-        deploy_strategy(deployment) 
-        self.assertEqual(deployment.status, expected_status, 
-                         'Expected deployment to have status "%s", has value "%s"' % (expected_status, deployment.status))
+        deploy_strategy(deployment)
+        self.assertEqual(deployment.status,
+            expected_status,
+            'Expected deployment to have status "%s", has value "%s"' % (expected_status, deployment.status))
 
 
     def test_deployment(self):
@@ -123,7 +125,8 @@ class DeploymentTests(BaseTestCase):
         deployment1 = Deployment.objects.create(comments='first', **self.deployment_args)
         user = User.objects.get(pk=self.deployment_args['user_id'])
         rollback_deployment = deployment1.create_rollback(self.now, user, 'first_rollback')
-        self.assertIsNone(rollback_deployment, 'Expected rollback deployment to not be created since the first one did not succeed')
+        self.assertIsNone(rollback_deployment,
+            'Expected rollback deployment to not be created since the first one did not succeed')
 
         deployment1.status = 'c'
         deployment1.save()
