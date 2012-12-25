@@ -25,7 +25,7 @@ class ApiTests(BaseTestCase):
     def _verify_field(self, data, key, to_verify_dict=None):
         self.assertTrue(key in data, 'Expected data to contain key %s' % key)
         if to_verify_dict:
-            self.assertEqual(data[key], to_verify_dict[key], 
+            self.assertEqual(data[key], to_verify_dict[key],
                              'Expected data[%s] to have value %s, instead got %s' % (key, str(to_verify_dict[key]), str(data[key])))
 
     def _verify_response(self, response, to_verify=None):
@@ -41,7 +41,7 @@ class ApiTests(BaseTestCase):
 
     def test_create_repository(self):
         kwargs = {
-            'name': 'repo_name', 
+            'name': 'repo_name',
             'location': 'repo_location'
         }
         response = self.client.post(reverse('api_create_repository'), kwargs)
@@ -58,7 +58,7 @@ class ApiTests(BaseTestCase):
         data = self._verify_response(response)
         for repository_dict in data:
             self._verify_repository_fields(repository_dict)
-            
+
     def test_get_repository(self):
         response = self.client.get(reverse('api_get_repository', kwargs={'repository_id': 1}))
         data = self._verify_response(response)
@@ -67,7 +67,7 @@ class ApiTests(BaseTestCase):
     def _verify_environment_fields(self, environment_dict):
         self._verify_field(environment_dict, 'id')
         self._verify_field(environment_dict, 'name')
-        
+
     def test_get_environments(self):
         response = self.client.get(reverse('api_get_environments'), {})
         data = self._verify_response(response)
@@ -139,24 +139,24 @@ class ApiTests(BaseTestCase):
         data = self._verify_response(response)
 
         example_output = {
-            'environment': '1', 
+            'environment': '1',
             'deployment_method': {
                 'id': 1,
-                'base_command': 'fab', 
+                'base_command': 'fab',
                 'method': 'fabric'
-            }, 
+            },
             'defaults': {
-                'deployment_args_template': 'test', 
-                'default_deployment_args': '', 
-                'id': 4, 
+                'deployment_args_template': 'test',
+                'default_deployment_args': '',
+                'id': 4,
                 'main_repository': {
                     'location': Repository.objects.get(pk=1).location,
-                    'name': 'test_code.git', 
+                    'name': 'test_code.git',
                     'id': 1
                 }
-            }, 
+            },
             'name': 'test stage',
-            'id': 4, 
+            'id': 4,
         }
         self._verify_environment_stage_fields(data, example_output)
 
@@ -179,7 +179,8 @@ class ApiTests(BaseTestCase):
             self._verify_deployment_fields(deployment_dict)
 
     def test_get_deployment(self):
-        response = self.client.get(reverse('api_get_deployment', kwargs={'deployment_id': self.deployments[0].id}), {})
+        response = self.client.get(reverse('api_get_deployment',
+                                           kwargs={'deployment_id': self.deployments[0].id}), {})
         data = self._verify_response(response)
         self._verify_deployment_fields(data)
 
@@ -203,7 +204,8 @@ class ApiTests(BaseTestCase):
             'comments': 'foo comments',
             'deployment_args_overrides': ''
         }
-        response = self.client.post(reverse('api_rollback_to_deployment', kwargs={'deployment_id': self.deployments[0].id}), 
+        response = self.client.post(reverse('api_rollback_to_deployment',
+                                            kwargs={'deployment_id': self.deployments[0].id}),
                                     rollback_args)
         data = self._verify_response(response)
         self._verify_deployment_fields(data)
@@ -212,8 +214,9 @@ class ApiTests(BaseTestCase):
     def test_abort_deployment(self):
         self.deployments[0].status = 'i'
         self.deployments[0].save()
-        response = self.client.post(reverse('api_abort_deployment', kwargs={'deployment_id': self.deployments[0].id}), {})
+        response = self.client.post(reverse('api_abort_deployment',
+                                            kwargs={'deployment_id': self.deployments[0].id}), {})
         data = self._verify_response(response)
         self._verify_deployment_fields(data)
         self.assertEqual(data['status'], 'a', 'Expected aborted deployment to be aborted')
-        
+

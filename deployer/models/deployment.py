@@ -101,7 +101,10 @@ class Deployment(models.Model):
             self.status = status
             self.completed_time = now
             if status == 'a':
+                from celery.task.control import revoke
                 self.aborted_user = user
+                revoke(self.task_id, terminate=True)
+
             self.save()
             deployment_completed.send(sender=self)
             return True
