@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load url from future %}
+
+{% block content %}
+
+{% if url_args %}
+<form method="post" action="{% url create_url url_args %}">
+{% else %}
+<form method="post" action="{% url create_url %}">
+{% endif %}
+{% csrf_token %}
+
+{% include "snippets/form_table.html" %}
+<input type="submit" value="{{ button_text }}" />
+</form>
+
+<p>
+<a href="{% url "g_index" %}">Return to index</a>
+</p>
+
+{% endblock %}

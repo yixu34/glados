@@ -2,6 +2,36 @@
 
 {% block content %}
 
-{{ name }}
+<p>
+Environment {{ data.name }}
+</p>
+
+<p>
+<b>Stages</b><br>
+{% if data.stages %}
+<table>
+    <tr>
+        <td>ID</td>
+        <td>Name</td>
+        <td>Defaults</td>
+        <td>Deployment method</td>
+    </tr>
+{% for s in data.stages %}
+    <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.name }}</td>
+        <td>{{ s.defaults }}</td>
+        <td>{{ s.deployment_method }}</td>
+    </tr>
+{% endfor %}
+</table>
+{% else %}
+    No stages defined for this environment
+{% endif %}
+<br>
+<a href="{% url g_create_environment_stage data.id %}">Create a new environment stage</a>
+</p>
+
+
 
 {% endblock %}

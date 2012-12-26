@@ -1,0 +1,17 @@
+{% load url from future %}
+{% block content %}
+
+{% if error %}
+{{ error }}
+{% endif %}
+
+<table>
+    {% for label, field in fields %}
+    <tr>
+        <td>{{ label }}</td>
+        <td><input type="text" name="{{ field }}" /></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

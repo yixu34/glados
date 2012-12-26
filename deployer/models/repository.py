@@ -19,8 +19,6 @@ class Repository(models.Model):
 
         if not os.path.exists(local_repository_path):
             # TODO:  Generalize this to other VCS systems?
-            s = 'git clone %s %s' % (self.location, self.name)
-
             subprocess.check_call('git clone %s %s' % (self.location, self.name),
                                   shell=True,
                                   cwd=settings.DEPLOYMENT_PATH)
@@ -31,4 +29,4 @@ class Repository(models.Model):
             'name': self.name,
             'location': self.location
         }
- 
+

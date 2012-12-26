@@ -74,27 +74,8 @@
     </tr>
 {% endfor %}
 </table>
-
-<b>Create a new deployment</b>
-<form method="post" action="{% url g_create_deployment %}">
-{% csrf_token %}
-<table>
-	<tr>
-		<td>Environment stage id:</td>
-		<td><input type="text" name="environment_stage_id" /></td>
-	</tr>
-	<tr>
-		<td>Comments:</td>
-		<td><input type="text" name="comments" /></td>
-	</tr>
-	<tr>
-		<td>Argument overrides:</td>
-		<td><input type="text" name="deployment_args_overrides" /></td>
-	</tr>
-</table>
-<input type="submit" value="Deploy!" />
-</form>
-
+<br>
+<a href="{% url g_create_deployment %}">Create a new deployment</a>
 
 <p><p>
 <a href="/logout">Log out</a>

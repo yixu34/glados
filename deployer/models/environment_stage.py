@@ -11,14 +11,16 @@ class EnvironmentStage(models.Model):
 
     unique_together = ('name', 'environment')
 
-    def to_dict(self):
-        return {
+    def to_dict(self, include_parent_environment_id=True):
+        result = {
             'id': self.id,
             'name': self.name,
-            'defaults': self.defaults.to_dict(), 
-            'environment': self.environment_id,
+            'defaults': self.defaults.to_dict(),
             'deployment_method': self.deployment_method.to_dict()
         }
+        if include_parent_environment_id:
+            result['environment'] = self.environment_id,
+        return result
 
     class Meta:
         app_label = 'deployer'
@@ -33,7 +35,7 @@ class EnvironmentStage(models.Model):
             overrides_dict = simplejson.loads(deployment_args_overrides)
             args_dict.update(overrides_dict)
         return args_dict
-        
+
     def expand_deployment_args(self, deployment_args_overrides):
         expanded_args = self.defaults.deployment_args_template
         args_dict = self.get_deployment_args_dict(deployment_args_overrides)

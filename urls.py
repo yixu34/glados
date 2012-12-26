@@ -15,11 +15,13 @@ urlpatterns = patterns('',
     # Deployments
     url(r'^deployments/create/$', 'views.create_deployment', name='g_create_deployment'),
     url(r'^deployments/(?P<deployment_id>\d+)/abort/$', 'views.abort_deployment', name='g_abort_deployment'),
-    url(r'^deployments/(?P<deployment_id>\d+)/rollback/$', 'views.rollback_to_deployment', name='g_rollback_to_deployment'),
+    url(r'^deployments/(?P<deployment_id>\d+)/rollback/$',
+        'views.rollback_to_deployment', name='g_rollback_to_deployment'),
     url(r'^deployments/(?P<deployment_id>\d+)/$', 'views.get_deployment', name='g_get_deployment'),
 
     # Deployment methods
-    url(r'^deployment_methods/create/$', 'views.create_deployment_method', name='g_create_deployment_method'),
+    url(r'^deployment_methods/create/$',
+        'views.create_deployment_method', name='g_create_deployment_method'),
 
     # Repositories
     url(r'^repositories/create/$', 'views.create_repository', name='g_create_repository'),
@@ -29,6 +31,8 @@ urlpatterns = patterns('',
     url(r'^environments/(?P<environment_id>\d+)/$', 'views.get_environment', name='g_get_environment'),
 
     # Environment stages
+    url(r'^environments/(?P<environment_id>\d+)/stages/create/$',
+        'views.create_environment_stage', name='g_create_environment_stage'),
 
     url(r'^api/', include('api.urls')),
 
