@@ -168,7 +168,8 @@ def get_environment(request, environment_id):
     if not stages_success:
         return _response(stages)
 
-    environment['data']['stages'] = stages['data']
+    if 'data' in stages:
+        environment['data']['stages'] = stages['data']
     return _response(environment)
 
 @login_required

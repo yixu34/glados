@@ -1,0 +1,10 @@
+-is wait actually running?
+
+-cancel doesn't seem to work reliably
+
+-make sure all input goes into the log file
+
+-check rollback
+
+-nicer ui
+
