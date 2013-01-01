@@ -79,7 +79,7 @@ def create_deployment(request):
 @require_POST
 def abort_deployment(request, deployment_id):
     # TODO:  Error handling
-    context, success = _get_response_context(api.views.create_deployment(request, deployment_id))
+    context, success = _get_response_context(api.views.abort_deployment(request, deployment_id))
     return HttpResponseRedirect(reverse('g_get_deployment', kwargs={'deployment_id': deployment_id}))
 
 @login_required

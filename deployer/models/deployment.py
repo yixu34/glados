@@ -7,6 +7,9 @@ from deployer.tasks import deploy
 from django.conf import settings
 import subprocess
 import os
+import logging
+
+logger = logging.getLogger(settings.APP_LOG)
 
 deployment_started = Signal(providing_args=[])
 deployment_completed = Signal(providing_args=[])
@@ -19,21 +22,24 @@ def deploy_strategy(deployment):
         deploy_args = stage.expand_deployment_args(deployment.deployment_args_overrides)
 
         if not os.path.exists(settings.LOG_FILE_ROOT):
+            logger.debug('Creating log file root')
             os.makedirs(settings.LOG_FILE_ROOT)
 
         # Make sure the deployment command is executable from here!
         cwd = '%s%s' % (settings.DEPLOYMENT_PATH, str(stage.defaults.main_repository.name))
+        logger.debug('Current working directory:  %s' % cwd)
         log_file_path = deployment.get_log_path()
+        logger.debug('Log file path:  %s' % log_file_path)
         log_file = open(log_file_path, 'w')
-        subprocess.check_call('%s %s' % (stage.deployment_method.base_command, deploy_args),
-                              shell=True,
-                              stdout=log_file,
-                              cwd=cwd)
+        command = '%s %s' % (stage.deployment_method.base_command, deploy_args)
+        logger.debug('Command:  %s' % command)
+        subprocess.check_call(command, shell=True, stdout=log_file, cwd=cwd)
         log_file.close()
 
         now = timezone.now()
         deployment.complete(now)
     except Exception as e:
+        logger.info('Deployment failed!  Message:  %s' % e.message)
         now = timezone.now()
         deployment.fail(now)
 
