@@ -23,17 +23,13 @@ def deploy_strategy(deployment):
         deploy_args = stage.expand_deployment_args(deployment.deployment_args_overrides)
 
         if not os.path.exists(settings.LOG_FILE_ROOT):
-            logger.debug('Creating log file root')
             os.makedirs(settings.LOG_FILE_ROOT)
 
         if not os.path.exists(settings.PID_FILE_ROOT):
-            logger.debug('Creating pid file root')
             os.makedirs(settings.PID_FILE_ROOT)
 
         cwd = '%s%s' % (settings.DEPLOYMENT_PATH, str(stage.defaults.main_repository.name))
-        logger.debug('Current working directory:  %s' % cwd)
         log_file_path = deployment.get_log_path()
-        logger.debug('Log file path:  %s' % log_file_path)
         log_file = open(log_file_path, 'w')
         with open(log_file_path, 'w') as log_file:
             command = 'stdbuf -oL %s %s' % (stage.deployment_method.base_command, deploy_args)
@@ -43,7 +39,7 @@ def deploy_strategy(deployment):
                                        stderr=subprocess.STDOUT, cwd=cwd)
             pid_file_path = deployment.get_pid_path()
             with open(pid_file_path, 'w') as pid_file:
-                pid_file.write(process.pid)
+                pid_file.write(str(process.pid))
             for line in iter(process.stdout.readline, b''):
                 log_file.write(line)
                 log_file.flush()
