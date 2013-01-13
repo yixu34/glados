@@ -19,7 +19,7 @@ class Migration(SchemaMigration):
         # Adding model 'Environment'
         db.create_table('deployer_environment', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255)),
         ))
         db.send_create_signal('deployer', ['Environment'])
 
@@ -71,6 +71,7 @@ class Migration(SchemaMigration):
             ('started_time', self.gf('django.db.models.fields.DateTimeField')(null=True)),
             ('completed_time', self.gf('django.db.models.fields.DateTimeField')(null=True)),
             ('task_id', self.gf('django.db.models.fields.CharField')(max_length=255, blank=True)),
+            ('subprocess_pid', self.gf('django.db.models.fields.IntegerField')(null=True)),
         ))
         db.send_create_signal('deployer', ['Deployment'])
 
@@ -147,6 +148,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'started_time': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'status': ('django.db.models.fields.CharField', [], {'max_length': '8'}),
+            'subprocess_pid': ('django.db.models.fields.IntegerField', [], {'null': 'True'}),
             'task_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'blank': 'True'})
         },
         'deployer.deploymentmethod': {
@@ -158,7 +160,7 @@ class Migration(SchemaMigration):
         'deployer.environment': {
             'Meta': {'object_name': 'Environment'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'})
+            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255'})
         },
         'deployer.environmentstage': {
             'Meta': {'object_name': 'EnvironmentStage'},

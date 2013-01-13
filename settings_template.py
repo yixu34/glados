@@ -161,7 +161,6 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
 LOG_FILE_ROOT = '/tmp/glados/logs/'
-PID_FILE_ROOT = '/tmp/glados/pids/'
 
 BROKER_URL = 'amqp://celery:beanutputter@127.0.0.1:5672/glados'
 

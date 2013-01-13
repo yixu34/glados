@@ -73,13 +73,11 @@ class DeploymentTests(BaseTestCase):
             if sender.comments == 'first':
                 received_signals.add('completed')
 
-
         with _override_deployment_strategy(strategy):
             deployment1.start(self.now)
         deployment1 = Deployment.objects.get(pk=deployment1.id)
         self.assertEqual(deployment1.status, complete_status,
                          'Expected first deployment to be marked as "%s"' % complete_status)
-
         self.assertTrue('completed' in received_signals,
                         'Expected to have received a signal that the first deployment completed')
         self.assertTrue('started' in received_signals,

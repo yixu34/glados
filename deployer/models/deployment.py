@@ -17,6 +17,10 @@ deployment_completed = Signal(providing_args=[])
 
 
 def deploy_strategy(deployment):
+    def fail():
+        now = timezone.now()
+        deployment.fail(now)
+
     try:
         stage = deployment.environment_stage
         stage.bootstrap_checkout_repositories()
@@ -24,9 +28,6 @@ def deploy_strategy(deployment):
 
         if not os.path.exists(settings.LOG_FILE_ROOT):
             os.makedirs(settings.LOG_FILE_ROOT)
-
-        if not os.path.exists(settings.PID_FILE_ROOT):
-            os.makedirs(settings.PID_FILE_ROOT)
 
         cwd = '%s%s' % (settings.DEPLOYMENT_PATH, str(stage.defaults.main_repository.name))
         log_file_path = deployment.get_log_path()
@@ -37,21 +38,23 @@ def deploy_strategy(deployment):
             args = shlex.split(command)
             process = subprocess.Popen(args, bufsize=1, stdout=subprocess.PIPE,
                                        stderr=subprocess.STDOUT, cwd=cwd)
-            pid_file_path = deployment.get_pid_path()
-            with open(pid_file_path, 'w') as pid_file:
-                pid_file.write(str(process.pid))
+            deployment.subprocess_pid = process.pid
+            deployment.save()
+
             for line in iter(process.stdout.readline, b''):
                 log_file.write(line)
                 log_file.flush()
             process.stdout.close()
-            process.wait()
+            result = process.wait()
+            if result != 0:
+                logger.info('Deployment failed!')
+                fail()
+                return
         now = timezone.now()
         deployment.complete(now)
     except Exception as e:
-        logger.info('Deployment failed!  Message:  %s' % e.message)
-        now = timezone.now()
-        deployment.fail(now)
-
+        logger.info('Deployment failed due to exception!  Message:  %s' % e.message)
+        fail()
 
 @receiver(deployment_completed)
 def on_deployment_complete(sender, **kwargs):
@@ -105,6 +108,7 @@ class Deployment(models.Model):
     completed_time = models.DateTimeField(null=True)
 
     task_id = models.CharField(max_length=255, blank=True)
+    subprocess_pid = models.IntegerField(null=True)
 
     objects = DeploymentManager()
 
@@ -162,9 +166,6 @@ class Deployment(models.Model):
 
     def get_log_path(self):
         return os.path.join(settings.LOG_FILE_ROOT, '%i.log' % self.id)
-
-    def get_pid_path(self):
-        return os.path.join(settings.PID_FILE_ROOT, '%i.log' % self.id)
 
     def _get_log_contents(self):
         try:
