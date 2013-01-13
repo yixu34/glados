@@ -1,3 +1,5 @@
+import os
+import signal
 from celery import task
 from celery.worker import state
 import celery.worker.job
@@ -22,10 +24,11 @@ def deploy(deployment_id):
 def on_deploy_revoked(*args, **kwargs):
     from deployer.models import Deployment
     deployments = Deployment.objects.filter(subprocess_pid__isnull=False)
-    print 'Deployments = %s' % str([d.id for d in deployments])
     for deployment in deployments:
-        print 'Killing %i' % deployment.subprocess_pid
-        os.kill(deployment.subprocess_pid, signal.SIGTERM)
-        deployment.subprocess_pid = None
-        deployment.save()
+        try:
+            os.kill(deployment.subprocess_pid, signal.SIGTERM)
+        finally:
+            # If something went wrong, then presumably the process doesn't exist anymore.
+            deployment.subprocess_pid = None
+            deployment.save()
 

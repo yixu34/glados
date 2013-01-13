@@ -46,6 +46,8 @@ def deploy_strategy(deployment):
                 log_file.flush()
             process.stdout.close()
             result = process.wait()
+            deployment.subprocess_pid = None
+            deployment.save()
             if result != 0:
                 logger.info('Deployment failed!')
                 fail()
@@ -55,6 +57,7 @@ def deploy_strategy(deployment):
     except Exception as e:
         logger.info('Deployment failed due to exception!  Message:  %s' % e.message)
         fail()
+
 
 @receiver(deployment_completed)
 def on_deployment_complete(sender, **kwargs):
