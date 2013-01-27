@@ -29,6 +29,9 @@ def deploy_strategy(deployment):
         if not os.path.exists(settings.LOG_FILE_ROOT):
             os.makedirs(settings.LOG_FILE_ROOT)
 
+        if not os.path.exists(settings.PID_FILE_ROOT):
+            os.makedirs(settings.PID_FILE_ROOT)
+
         cwd = '%s%s' % (settings.DEPLOYMENT_PATH, str(stage.defaults.main_repository.name))
         log_file_path = deployment.get_log_path()
         log_file = open(log_file_path, 'w')
@@ -38,7 +41,9 @@ def deploy_strategy(deployment):
             args = shlex.split(command)
             process = subprocess.Popen(args, bufsize=1, stdout=subprocess.PIPE,
                                        stderr=subprocess.STDOUT, cwd=cwd)
-            deployment.subprocess_pid = process.pid
+            pid_file_path = deployment.get_pid_path()
+            with open(pid_file_path, 'w') as pid_file:
+                pid_file.write(str(process.pid))
             deployment.save()
 
             for line in iter(process.stdout.readline, b''):
@@ -46,7 +51,6 @@ def deploy_strategy(deployment):
                 log_file.flush()
             process.stdout.close()
             result = process.wait()
-            deployment.subprocess_pid = None
             deployment.save()
             if result != 0:
                 logger.info('Deployment failed!')
@@ -111,7 +115,6 @@ class Deployment(models.Model):
     completed_time = models.DateTimeField(null=True)
 
     task_id = models.CharField(max_length=255, blank=True)
-    subprocess_pid = models.IntegerField(null=True)
 
     objects = DeploymentManager()
 
@@ -169,6 +172,9 @@ class Deployment(models.Model):
 
     def get_log_path(self):
         return os.path.join(settings.LOG_FILE_ROOT, '%i.log' % self.id)
+
+    def get_pid_path(self):
+        return os.path.join(settings.PID_FILE_ROOT, '%i.pid' % self.id)
 
     def _get_log_contents(self):
         try:
