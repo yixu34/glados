@@ -11,14 +11,6 @@ Status is {{ data }}
 </form>
 {% endif %}
 
-{% if data.status == "c" %}
-<form method="post" action="{% url g_rollback_to_deployment data.id %}">
-{% csrf_token %}
-{% include "snippets/form_table.html" %}
-<input type="submit" value="Roll back!" />
-</form>
-{% endif %}
-
 <p>
 <a href="{% url g_index %}">Return to index</a>
 </p>

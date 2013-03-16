@@ -160,6 +160,10 @@ class Deployment(models.Model):
     def fail(self, now):
         return self._try_set_done_status('f', now)
 
+    # TODO:  Not going to expose rollbacks for now.  Need to flesh out what exactly rolling back means.
+    # All I know is that having "rollback" mean "retry a previous deployment" does not work very well as it
+    # assumes that the deployment and/or service are stateless.
+    # No point in implementing something that's not very usable.
     def create_rollback(self, now, user, comments, deployment_args_overrides=''):
         if self.status == 'c':
             # Only allow rollback to a successful deployment.

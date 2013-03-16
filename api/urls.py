@@ -8,8 +8,6 @@ urlpatterns = patterns('api.views',
     url(r'^deployments/$', 'get_deployments', name='api_get_deployments'),
     url(r'^deployments/create/$', 'create_deployment', name='api_create_deployment'),
     url(r'^deployments/(?P<deployment_id>\d+)/$', 'get_deployment', name='api_get_deployment'),
-    url(r'^deployments/(?P<deployment_id>\d+)/rollback/$',
-        'rollback_to_deployment', name='api_rollback_to_deployment'),
     url(r'^deployments/(?P<deployment_id>\d+)/abort/$', 'abort_deployment', name='api_abort_deployment'),
 
     # Environments

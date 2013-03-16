@@ -15,8 +15,6 @@ urlpatterns = patterns('',
     # Deployments
     url(r'^deployments/create/$', 'views.create_deployment', name='g_create_deployment'),
     url(r'^deployments/(?P<deployment_id>\d+)/abort/$', 'views.abort_deployment', name='g_abort_deployment'),
-    url(r'^deployments/(?P<deployment_id>\d+)/rollback/$',
-        'views.rollback_to_deployment', name='g_rollback_to_deployment'),
     url(r'^deployments/(?P<deployment_id>\d+)/$', 'views.get_deployment', name='g_get_deployment'),
 
     # Deployment methods
