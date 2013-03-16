@@ -196,21 +196,6 @@ class ApiTests(BaseTestCase):
         response = self.client.post(reverse('api_create_deployment'), deployment_args)
         data = self._verify_response(response)
 
-    def test_rollback_to_deployment(self):
-        self.deployments[0].status = 'c'
-        self.deployments[0].save()
-        rollback_args = {
-            'environment_stage_id': self.deployments[0].environment_stage_id,
-            'comments': 'foo comments',
-            'deployment_args_overrides': ''
-        }
-        response = self.client.post(reverse('api_rollback_to_deployment',
-                                            kwargs={'deployment_id': self.deployments[0].id}),
-                                    rollback_args)
-        data = self._verify_response(response)
-        self._verify_deployment_fields(data)
-        self.assertEqual(data['status'], 'i', 'Expected rollback deployment to be in progress')
-
     def test_abort_deployment(self):
         self.deployments[0].status = 'i'
         self.deployments[0].save()
