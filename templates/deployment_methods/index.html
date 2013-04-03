@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% block content %}
+
+<p>
+{% if deployment_methods %}
+<table class="rounded_corner">
+    <thead>
+        <tr>
+            <th class="rounded_top_left">Name</th>
+            <th class="rounded_top_right">Command</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for d in deployment_methods %}
+        <tr>
+            {% if forloop.last %}
+                <td class="rounded_bottom_left">{{d.method}}</td>
+                <td class="rounded_bottom_right">{{d.base_command}}</td>
+            {% else %}
+                <td>{{d.method}}</td><td>{{d.base_command}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    No deployment methods created
+{% endif %}
+
+{% include "create.html" %}
+
+{% endblock %}

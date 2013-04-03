@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load url from future %}
+{% block content %}
+
+<p>
+{% if repositories %}
+<table class="rounded_corner">
+    <thead>
+        <tr>
+            <th class="rounded_top_left">Name</th>
+            <th class="rounded_top_right">Location</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in repositories %}
+        <tr>
+            {% if forloop.last %}
+                <td class="rounded_bottom_left">{{r.name}}</td>
+                <td class="rounded_bottom_right">{{r.location}}</td>
+            {% else %}
+                <td>{{r.name}}</td><td>{{r.location}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+    No repositories created
+{% endif %}
+
+{% include "create.html" %}
+
+{% endblock %}

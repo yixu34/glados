@@ -1,4 +1,3 @@
-{% extends "base.html" %}
 {% load url from future %}
 
 {% block content %}
@@ -13,9 +12,5 @@
 {% include "snippets/form_table.html" %}
 <input type="submit" value="{{ button_text }}" />
 </form>
-
-<p>
-<a href="{% url "g_index" %}">Return to index</a>
-</p>
 
 {% endblock %}

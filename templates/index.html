@@ -3,60 +3,6 @@
 {% block content %}
 
 <p>
-<b>Deployment methods</b><br>
-{% if deployment_methods %}
-<table>
-    <tr>
-        <td>Name</td><td>Command</td>
-    </tr>
-    {% for d in deployment_methods %}
-    <tr>
-        <td>{{d.method}}</td><td>{{d.base_command}}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-    No deployment methods created
-{% endif %}
-<br>
-<a href="{% url g_create_deployment_method %}">Create a new deployment method</a>
-</p>
-
-
-<p>
-<b>Repositories</b><br>
-{% if repositories %}
-<table>
-    <tr>
-        <td>Name</td><td>Location</td>
-    </tr>
-    {% for r in repositories %}
-    <tr>
-        <td>{{r.name}}</td><td>{{r.location}}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% else %}
-    No repositories created
-{% endif %}
-<br>
-<a href="{% url g_create_repository %}">Create a new repository</a>
-</p>
-
-<p>
-<b>Environments</b><br>
-{% if environments %}
-    {% for e in environments %}
-        <a href="{% url g_get_environment e.id %}">{{e.name}}</a><br>
-    {% endfor %}
-{% else %}
-    No environments created
-{% endif %}
-<br>
-<a href="{% url g_create_environment %}">Create a new environment</a>
-</p>
-
-<p>
 <b>Last few deployments</b><br>
 <table>
 {% if deployments %}
@@ -85,7 +31,5 @@
 <br>
 <a href="{% url g_create_deployment %}">Create a new deployment</a>
 </p>
-
-<a href="/logout">Log out</a>
 
 {% endblock %}

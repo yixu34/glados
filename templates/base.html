@@ -1,13 +1,33 @@
 <html>
-	<head>
-        <link href="{{STATIC_URL}}css/glados.css" rel="stylesheet" type="text/css">
-		<title>
-			GLADOS Deployment System
-		</title>
-	</head>
+<head>
+<link href="{{STATIC_URL}}css/glados.css" rel="stylesheet" type="text/css">
+<title>GLADOS Deployment System</title>
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.1.1.min.js"></script>
+</head>
 
-	{% block content %}
+<body>
+    <div id="main_container">
+        <div class="header">
+            <div class="left_header">Glados</div>
+            <div class="right_header">Welcome {{ user }} | <a href="/logout">Log out</a></div>
+        </div>
 
-	{% endblock %}
-
+        <div class="main_content">
+            <div class="left_content">
+                <ul>
+                    <li><a class="menuitem" href="/">Home</a></li>
+                    <li><a class="menuitem" href="{% url g_repository_index %}">Repositories</a></li>
+                    <li><a class="menuitem" href="{% url g_deployment_method_index %}">Deployment methods</a></li>
+                    <li><a class="menuitem" href="{% url g_environment_index %}">Environments</a></li>
+                    <li><a class="menuitem" href="">Users and groups</a></li>
+                </ul>
+            </div>
+            <div class="right_content">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
 </html>

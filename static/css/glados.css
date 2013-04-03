@@ -1,3 +1,99 @@
-p {
-    color: blue;
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0;
+    font-size: 12px;
+    margin: 0 auto;
 }
+#main_container {
+    margin: 0 auto;
+    width: 900px;
+    padding: 0px 0 0px 0;
+}
+.header {
+    width: 900px;
+    height: 50px;
+}
+.left_header {
+    float: left;
+    padding: 10px 0 0 0;
+}
+.right_header {
+    width: 350px;
+    float: right;
+    text-align: right;
+    padding: 10px 0 0 0;
+}
+
+.main_content {
+    margin: 0 auto;
+    width: 900px;
+    height: auto;
+    padding: 0px 0 50px 0;
+}
+
+.left_content {
+    width: 195px;
+    float: left;
+    padding: 30px 0 0 20px;
+}
+.left_content ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+.left_content a.menuitem {
+    background: url(/static/images/sidebar_menu_top.gif) no-repeat center top;
+    color: #ffffff;
+    display: block;
+    position: relative;
+    width: 185px;
+    height: 31px;
+    margin: 0 0 5px 0;
+    line-height: 31px;
+    padding: 0px 0 0 10px;
+    text-decoration: none;
+}
+
+.right_content {
+    width: 625px;
+    float: left;
+    padding: 30px 0 0 30px;
+}
+
+table.rounded_corner {
+    margin: 0px;
+    width: 625px;
+    text-align: left;
+    border-collapse: collapse;
+    font-size:12px;
+}
+table.rounded_corner th.rounded_top_left {
+    width: 26px;
+    background: #60c8f2 url(/static/images/top_left.jpg) left top no-repeat;
+}
+table.rounded_corner th.rounded_top_right {
+    background: #60c8f2 url(/static/images/top_right.jpg) right top no-repeat;
+}
+table.rounded_corner td.rounded_bottom_left {
+    background: #ecf8fd url(/static/images/bottom_left.jpg) left bottom no-repeat;
+}
+table.rounded_corner td.rounded_bottom_right {
+    background: #ecf8fd url(/static/images/bottom_right.jpg) right bottom no-repeat;
+}
+
+table.rounded_corner th {
+    padding: 8px;
+    font-weight: normal;
+    color: #000309;
+    background: #60c8f2;
+}
+
+table.rounded_corner td {
+    padding: 8px;
+    border-top: 1px solid #ffffff;
+}
+
+table.rounded_corner tbody tr td {
+    background: #ecf8fd;
+}
+

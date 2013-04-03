@@ -18,19 +18,23 @@ urlpatterns = patterns('',
     url(r'^deployments/(?P<deployment_id>\d+)/$', 'views.get_deployment', name='g_get_deployment'),
 
     # Deployment methods
+    url(r'^deployment_methods/$', 'views.deployment_method_index', name='g_deployment_method_index'),
     url(r'^deployment_methods/create/$',
         'views.create_deployment_method', name='g_create_deployment_method'),
 
     # Repositories
+    url(r'^repositories/$', 'views.repository_index', name='g_repository_index'),
     url(r'^repositories/create/$', 'views.create_repository', name='g_create_repository'),
 
     # Environments
+    url(r'^environments/$', 'views.environment_index', name='g_environment_index'),
     url(r'^environments/create/$', 'views.create_environment', name='g_create_environment'),
-    url(r'^environments/(?P<environment_id>\d+)/$', 'views.get_environment', name='g_get_environment'),
 
     # Environment stages
     url(r'^environments/(?P<environment_id>\d+)/stages/create/$',
         'views.create_environment_stage', name='g_create_environment_stage'),
+    url(r'^environments/(?P<environment_id>\d+)/stages/(?P<stage_id>\d+)/$',
+        'views.get_environment_stage', name='g_get_environment_stage'),
 
     url(r'^api/', include('api.urls')),
 

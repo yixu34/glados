@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.http import require_GET, require_POST
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-from deployer.models import Deployment, DeploymentMethod, Environment, Repository
+from deployer.models import Deployment, DeploymentMethod, Environment, EnvironmentStage, Repository
 from util.helpers import get_existing_field_values
 import simplejson
 import api.views
@@ -29,14 +29,10 @@ def _get_and_merge_contexts(response, *existing_contexts):
 
 @login_required
 def index(request):
-    deployment_methods = DeploymentMethod.objects.all()
     repositories = Repository.objects.all()
     environments = Environment.objects.all()
     deployments = Deployment.objects.all().order_by('-created_time', '-id')[:20]
     context = {
-        'deployment_methods': deployment_methods,
-        'repositories': repositories,
-        'environments': environments,
         'deployments': deployments,
     }
     return render_to_response('index.html', context, context_instance=RequestContext(request))
@@ -99,93 +95,102 @@ def get_deployment(request, deployment_id):
     return render_to_response('deployments/index.html', context, context_instance=RequestContext(request))
 
 @login_required
-def create_repository(request):
+@require_GET
+def repository_index(request):
     fields = [
         ('Name', 'name'),
         ('Location', 'location')
     ]
+    repositories = Repository.objects.all()
     context = {
+        'repositories': repositories,
         'fields': get_existing_field_values(request, fields),
         'create_url': 'g_create_repository',
         'button_text': 'Create repository!'
     }
-    if request.method == 'POST':
-        context, success = _get_and_merge_contexts(api.views.create_repository(request), context)
-        if success:
-            return HttpResponseRedirect(reverse('g_index'))
-    return render_to_response('create.html', context, context_instance=RequestContext(request))
+    return render_to_response('repositories/index.html', context, context_instance=RequestContext(request))
 
 @login_required
-def create_environment(request):
+@require_POST
+def create_repository(request):
+    context, success = _get_response_context(api.views.create_repository(request))
+    return HttpResponseRedirect(reverse('g_repository_index'))
+
+@login_required
+@require_GET
+def environment_index(request):
     fields = [
-        ('Name', 'name')
+        ('Name', 'name'),
     ]
     context = {
+        'environments': [(e, e.environmentstage_set.all()) for e in Environment.objects.all()],
         'fields': get_existing_field_values(request, fields),
         'create_url': 'g_create_environment',
         'button_text': 'Create environment!'
     }
-    if request.method == 'POST':
-        context, success = _get_and_merge_contexts(api.views.create_environment(request), context)
-        if success:
-            return HttpResponseRedirect(reverse('g_index'))
-    return render_to_response('create.html', context, context_instance=RequestContext(request))
+    return render_to_response('environments/index.html', context, context_instance=RequestContext(request))
 
 @login_required
+@require_POST
+def create_environment(request):
+    context, success = _get_response_context(api.views.create_environment(request))
+    return HttpResponseRedirect(reverse('g_environment_index'))
+
+@login_required
+@require_POST
 def create_environment_stage(request, environment_id):
-    fields = [
-        ('Stage name', 'stage_name'),
-        ('Defaults string', 'defaults_string'),
-        ('Deployment method name', 'deployment_method_name')
-    ]
-    context = {
-        'fields': get_existing_field_values(request, fields),
-        'create_url': 'g_create_environment_stage',
-        'button_text': 'Create environment stage!',
-        'url_args': environment_id
-    }
-    if request.method == 'POST':
-        context, success = _get_and_merge_contexts(
-                api.views.create_environment_stage(request, environment_id), context)
-        if success:
-            return HttpResponseRedirect(reverse('g_index'))
-    return render_to_response('create.html', context, context_instance=RequestContext(request))
+    context, success = _get_response_context(api.views.create_environment_stage(request, environment_id))
+    return HttpResponseRedirect(reverse('g_environment_index'))
+#    fields = [
+#        ('Stage name', 'stage_name'),
+#        ('Defaults string', 'defaults_string'),
+#        ('Deployment method name', 'deployment_method_name')
+#    ]
+#    context = {
+#        'fields': get_existing_field_values(request, fields),
+#        'create_url': 'g_create_environment_stage',
+#        'button_text': 'Create environment stage!',
+#        'url_args': environment_id
+#    }
+#    if request.method == 'POST':
+#        context, success = _get_and_merge_contexts(
+#                api.views.create_environment_stage(request, environment_id), context)
+#        if success:
+#            return HttpResponseRedirect(reverse('g_index'))
+#    return render_to_response('create.html', context, context_instance=RequestContext(request))
 
 @login_required
 @require_GET
-def get_environment(request, environment_id):
-    def _response(context):
-        return render_to_response('environments/index.html', context,
-               context_instance=RequestContext(request))
-
-    environment, environment_success = _get_response_context(
-            api.views.get_environment(request, environment_id))
-    if not environment_success:
-        return _response(environment)
-
-    stages, stages_success = _get_response_context(
-            api.views.get_environment_stages(request, environment_id))
-    if not stages_success:
-        return _response(stages)
-
-    if 'data' in stages:
-        environment['data']['stages'] = stages['data']
-    return _response(environment)
+def get_environment_stage(request, environment_id, stage_id):
+#    context, success = _get_response_context(
+#            api.views.get_environment_stage(request, environment_id, stage_id))
+#    raise Exception("context = %s" % str(context))
+    context = {
+        'stage': EnvironmentStage.objects.get(pk=stage_id)
+    }
+    return render_to_response('environments/stages/show.html', context,
+            context_instance=RequestContext(request))
 
 @login_required
-def create_deployment_method(request):
+@require_GET
+def deployment_method_index(request):
     fields = [
-        ('Method name', 'method'),
+        ('Name', 'method'),
         ('Command', 'base_command')
     ]
+    deployment_methods = DeploymentMethod.objects.all()
     context = {
+        'deployment_methods': deployment_methods,
         'fields': get_existing_field_values(request, fields),
         'create_url': 'g_create_deployment_method',
         'button_text': 'Create deployment method!'
     }
-    if request.method == 'POST':
-        context, success = _get_and_merge_contexts(api.views.create_deployment_method(request), context)
-        if success:
-            return HttpResponseRedirect(reverse('g_index'))
-    return render_to_response('create.html', context, context_instance=RequestContext(request))
+    return render_to_response('deployment_methods/index.html', context,
+            context_instance=RequestContext(request))
+
+@login_required
+@require_POST
+def create_deployment_method(request):
+    context, success = _get_response_context(api.views.create_deployment_method(request))
+    return HttpResponseRedirect(reverse('g_deployment_method_index'))
 
