@@ -24,6 +24,7 @@
             {% else %}
                 <td>{{e.name}}</td>
                 <td>
+                    <a href="{% url g_create_environment_stage e.id %}">Create new</a>
                 {% for s in stages %}
                     <a href="{% url g_get_environment_stage e.id s.id %}">{{ s.name }}</a>
                 {% endfor %}

@@ -137,36 +137,33 @@ def create_environment(request):
     return HttpResponseRedirect(reverse('g_environment_index'))
 
 @login_required
-@require_POST
 def create_environment_stage(request, environment_id):
-    context, success = _get_response_context(api.views.create_environment_stage(request, environment_id))
-    return HttpResponseRedirect(reverse('g_environment_index'))
-#    fields = [
-#        ('Stage name', 'stage_name'),
-#        ('Defaults string', 'defaults_string'),
-#        ('Deployment method name', 'deployment_method_name')
-#    ]
-#    context = {
-#        'fields': get_existing_field_values(request, fields),
-#        'create_url': 'g_create_environment_stage',
-#        'button_text': 'Create environment stage!',
-#        'url_args': environment_id
-#    }
-#    if request.method == 'POST':
-#        context, success = _get_and_merge_contexts(
-#                api.views.create_environment_stage(request, environment_id), context)
-#        if success:
-#            return HttpResponseRedirect(reverse('g_index'))
-#    return render_to_response('create.html', context, context_instance=RequestContext(request))
+    fields = [
+        ('Stage name', 'stage_name'),
+        ('Defaults string', 'defaults_string'),
+        ('Deployment method name', 'deployment_method_name')
+   ]
+    context = {
+        'fields': get_existing_field_values(request, fields),
+        'create_url': 'g_create_environment_stage',
+        'button_text': 'Create environment stage!',
+        'url_args': environment_id
+    }
+    if request.method == 'POST':
+        context, success = _get_and_merge_contexts(
+                api.views.create_environment_stage(request, environment_id), context)
+        if success:
+            return HttpResponseRedirect(reverse('g_environment_index'))
+        else:
+            raise Exception(context['error'])
+    return render_to_response('environments/stages/create.html', context,
+            context_instance=RequestContext(request))
 
 @login_required
 @require_GET
 def get_environment_stage(request, environment_id, stage_id):
-#    context, success = _get_response_context(
-#            api.views.get_environment_stage(request, environment_id, stage_id))
-#    raise Exception("context = %s" % str(context))
     context = {
-        'stage': EnvironmentStage.objects.get(pk=stage_id)
+        'stage': EnvironmentStage.objects.get(pk=stage_id),
     }
     return render_to_response('environments/stages/show.html', context,
             context_instance=RequestContext(request))

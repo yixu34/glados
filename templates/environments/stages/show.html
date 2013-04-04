@@ -3,40 +3,21 @@
 {% block content %}
 
 <p>
-{% if environments %}
 <table class="rounded_corner">
     <thead>
         <tr>
             <th class="rounded_top_left">Name</th>
-            <th class="rounded_top_right">Stages</th>
+            <th>Defaults</th>
+            <th class="rounded_top_right">Deployment method</th>
         </tr>
     </thead>
     <tbody>
-        {% for e, stages in environments %}
         <tr>
-            {% if forloop.last %}
-                <td class="rounded_bottom_left">{{e.name}}</td>
-                <td class="rounded_bottom_right">
-                {% for s in stages %}
-                    {{ s.name }}
-                {% endfor %}
-                </td>
-            {% else %}
-                <td>{{e.name}}</td>
-                <td>
-                {% for s in stages %}
-                    <a href="{% url g_get_environment_stage e.id s.id %}">{{ s.name }}</a>
-                {% endfor %}
-                </td>
-            {% endif %}
+            <td class="rounded_bottom_left">{{stage.name}}</td>
+            <td>DEFAULTS GO HERE</td>
+            <td class="rounded_bottom_right">{{stage.deployment_method.base_command}}</td>
         </tr>
-        {% endfor %}
     </tbody>
 </table>
-{% else %}
-    No environments created
-{% endif %}
-
-{% include "create.html" %}
 
 {% endblock %}
