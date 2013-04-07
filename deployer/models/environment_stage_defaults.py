@@ -10,7 +10,8 @@ class EnvironmentStageDefaults(models.Model):
         app_label = 'deployer'
 
     def to_dict(self):
-        default_deployment_args_dict = simplejson.loads(self.default_deployment_args) if self.default_deployment_args else ''
+        default_deployment_args_dict = simplejson.loads(self.default_deployment_args) \
+                if self.default_deployment_args else ''
         return {
             'id': self.id,
             'deployment_args_template': self.deployment_args_template,

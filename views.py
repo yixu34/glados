@@ -28,18 +28,15 @@ def _get_and_merge_contexts(response, *existing_contexts):
     return merged, success
 
 @login_required
+@require_GET
 def index(request):
     deployments = Deployment.objects.all().order_by('-created_time', '-id')[:20]
-    fields = [
-        ('Environment stage id', 'environment_stage_id'),
-        ('Comments', 'comments'),
-        ('Argument overrides', 'deployment_args_overrides')
-    ]
+    environment_stages = EnvironmentStage.objects.all()
     context = {
-        'fields': get_existing_field_values(request, fields),
         'create_url': 'g_create_deployment',
         'button_text': 'Create deployment!',
         'deployments': deployments,
+        'environment_stages': environment_stages
     }
     return render_to_response('index.html', context, context_instance=RequestContext(request))
 
