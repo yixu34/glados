@@ -2,34 +2,33 @@
 
 {% block content %}
 
-<p>
-<b>Last few deployments</b><br>
-<table>
 {% if deployments %}
-    <tr>
-        <td>id</td>
-        <td>Status</td>
-        <td>Environment stage</td>
-        <td>User</td>
-        <td>Argument overrides</td>
-        <td>Comments</td>
-    </tr>
-{% else %}
-    No deployments yet<p>
-{% endif %}
+<table class="rounded_corner">
+    <thead>
+        <tr>
+            <th class="rounded_top_left">Status</th>
+            <th>Environment</th>
+            <th>Stage</th>
+            <th>User</th>
+            <th class="rounded_top_right">Comments</th>
+        </tr>
+    </thead>
 {% for d in deployments %}
     <tr>
-        <td><a href="{% url g_get_deployment d.id %}">{{d.id}}</a></td>
-        <td>{{d.status}}</td>
-        <td>{{d.environment_stage.environment.name}} {{d.environment_stage.name}}</td>
+        <td class="{{ forloop.last|yesno:"rounded_bottom_left," }}">{{d.status}}</td>
+        <td>{{d.environment_stage.environment.name}}</td>
+        <td>{{d.environment_stage.name}}</td>
         <td>{{d.created_user}}</td>
-        <td>{{d.deployment_args_overrides}}</td>
-        <td>{{d.comments}}</td>
+        <td class="{{ forloop.last|yesno:"rounded_bottom_right," }}">
+            <a href="{% url g_get_deployment d.id %}">{{d.comments}}</a>
+        </td>
     </tr>
 {% endfor %}
 </table>
-<br>
-<a href="{% url g_create_deployment %}">Create a new deployment</a>
-</p>
+{% else %}
+    No deployments yet<p>
+{% endif %}
+
+{% include "create.html" %}
 
 {% endblock %}

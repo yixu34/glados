@@ -14,12 +14,8 @@
     <tbody>
         {% for r in repositories %}
         <tr>
-            {% if forloop.last %}
-                <td class="rounded_bottom_left">{{r.name}}</td>
-                <td class="rounded_bottom_right">{{r.location}}</td>
-            {% else %}
-                <td>{{r.name}}</td><td>{{r.location}}</td>
-            {% endif %}
+            <td class="{{ forloop.last|yesno:"rounded_bottom_left," }}">{{r.name}}</td>
+            <td class="{{ forloop.last|yesno:"rounded_bottom_right," }}">{{r.location}}</td>
         </tr>
         {% endfor %}
     </tbody>

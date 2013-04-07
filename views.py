@@ -29,10 +29,16 @@ def _get_and_merge_contexts(response, *existing_contexts):
 
 @login_required
 def index(request):
-    repositories = Repository.objects.all()
-    environments = Environment.objects.all()
     deployments = Deployment.objects.all().order_by('-created_time', '-id')[:20]
+    fields = [
+        ('Environment stage id', 'environment_stage_id'),
+        ('Comments', 'comments'),
+        ('Argument overrides', 'deployment_args_overrides')
+    ]
     context = {
+        'fields': get_existing_field_values(request, fields),
+        'create_url': 'g_create_deployment',
+        'button_text': 'Create deployment!',
         'deployments': deployments,
     }
     return render_to_response('index.html', context, context_instance=RequestContext(request))
@@ -54,22 +60,10 @@ def register(request):
         return render_to_response('register.html', context, context_instance=RequestContext(request))
 
 @login_required
+@require_POST
 def create_deployment(request):
-    fields = [
-        ('Environment stage id', 'environment_stage_id'),
-        ('Comments', 'comments'),
-        ('Argument overrides', 'deployment_args_overrides')
-    ]
-    context = {
-        'fields': get_existing_field_values(request, fields),
-        'create_url': 'g_create_deployment',
-        'button_text': 'Create deployment!'
-    }
-    if request.method == 'POST':
-        context, success = _get_and_merge_contexts(api.views.create_deployment(request), context)
-        if success:
-            return HttpResponseRedirect(reverse('g_index'))
-    return render_to_response('create.html', context, context_instance=RequestContext(request))
+    context, success = _get_response_context(api.views.create_deployment(request))
+    return HttpResponseRedirect(reverse('g_index'))
 
 @login_required
 @require_POST
