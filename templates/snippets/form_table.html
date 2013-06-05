@@ -6,11 +6,24 @@
 {% endif %}
 
 <table>
-    {% for label, field in fields %}
-    <tr>
-        <td>{{ label }}</td>
-        <td><input type="text" name="{{ field }}" /></td>
-    </tr>
+    {% for type, label, field, values in fields %}
+        {% if type == "textbox" %}
+            <tr>
+                <td>{{ label }}</td>
+                <td><input type="text" name="{{ field }}" /></td>
+            </tr>
+        {% elif type == "dropdown" %}
+            <tr>
+                <td>{{ label }} </td>
+                <td>
+                    <select name="{{ field }}" />
+                        {% for v in values %}
+                            <option value="{{ v.value }}">{{ v.label }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+        {% endif %}
     {% endfor %}
 </table>
 

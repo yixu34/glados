@@ -27,6 +27,12 @@ def _get_and_merge_contexts(response, *existing_contexts):
     merged =_merge_contexts(context, *existing_contexts)
     return merged, success
 
+def _textbox(label, name):
+    return ('textbox', label, name, None)
+
+def _dropdown(label, name, values):
+    return ('dropdown', label, name, values)
+
 @login_required
 @require_GET
 def index(request):
@@ -89,8 +95,8 @@ def get_deployment(request, deployment_id):
 @require_GET
 def repository_index(request):
     fields = [
-        ('Name', 'name'),
-        ('Location', 'location')
+        _textbox('Name', 'name'),
+        _textbox('Location', 'location')
     ]
     repositories = Repository.objects.all()
     context = {
@@ -111,7 +117,7 @@ def create_repository(request):
 @require_GET
 def environment_index(request):
     fields = [
-        ('Name', 'name'),
+        _textbox('Name', 'name')
     ]
     context = {
         'environments': [(e, e.environmentstage_set.all()) for e in Environment.objects.all()],
@@ -129,11 +135,12 @@ def create_environment(request):
 
 @login_required
 def create_environment_stage(request, environment_id):
+    deployment_methods = map(lambda d: {'value': d.method, 'label': d.method}, DeploymentMethod.objects.all())
     fields = [
-        ('Stage name', 'stage_name'),
-        ('Defaults string', 'defaults_string'),
-        ('Deployment method name', 'deployment_method_name')
-   ]
+        _textbox('Stage name', 'stage_name'),
+        _textbox('Defaults string', 'defaults_string'),
+        _dropdown('Deployment method name', 'deployment_method_name', deployment_methods)
+    ]
     context = {
         'fields': get_existing_field_values(request, fields),
         'create_url': 'g_create_environment_stage',
@@ -163,8 +170,8 @@ def get_environment_stage(request, environment_id, stage_id):
 @require_GET
 def deployment_method_index(request):
     fields = [
-        ('Name', 'method'),
-        ('Command', 'base_command')
+        _textbox('Name', 'method'),
+        _textbox('Command', 'base_command')
     ]
     deployment_methods = DeploymentMethod.objects.all()
     context = {
