@@ -37,8 +37,15 @@ def _dropdown(label, name, values):
 @require_GET
 def index(request):
     deployments = Deployment.objects.all().order_by('-created_time', '-id')[:20]
-    environment_stages = EnvironmentStage.objects.all()
+    environment_stages = map(lambda e: {'value': e.id, 'label': '%s/%s' % (e.environment.name, e.name)},
+            EnvironmentStage.objects.all())
+    fields = [
+        _dropdown('Environment stages', 'environment_stage_id', environment_stages),
+        _textbox('Argument overrides', 'deployment_args_overrides'),
+        _textbox('Comments', 'comments')
+    ]
     context = {
+        'fields': get_existing_field_values(request, fields),
         'create_url': 'g_create_deployment',
         'button_text': 'Create deployment!',
         'deployments': deployments,

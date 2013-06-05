@@ -29,36 +29,6 @@
     No deployments yet<p>
 {% endif %}
 
-{% load url from future %}
-{% if url_args %}
-<form method="post" action="{% url create_url url_args %}">
-{% else %}
-<form method="post" action="{% url create_url %}">
-{% endif %}
-{% csrf_token %}
-
-<table>
-    <tr>
-        <td>Environment stages</td>
-        <td>
-            <select name="environment_stage_id">
-                {% for s in environment_stages %}
-                <option value="{{s.id}}">{{s.environment.name}}/{{s.name}}</option>
-                {% endfor %}
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td>Argument overrides</td>
-        <td><input type="text" name="deployment_args_overrides" /></td>
-    </tr>
-    <tr>
-        <td>Comments</td>
-        <td><input type="text" name="comments" /></td>
-    </tr>
-</table>
-<input type="submit" value="Create deployment!" />
-</form>
-
+{% include "create.html" %}
 
 {% endblock %}
